@@ -1,0 +1,35 @@
+Data licence for the files under data/ in this repository
+
+The raw measurement data in data/ (every .jsonl file) is released under the
+Creative Commons Attribution 4.0 International licence (CC BY 4.0).
+
+Full licence text and legal code: https://creativecommons.org/licenses/by/4.0/
+
+Summary of CC BY 4.0 (the legal code above governs; this is a plain-language
+summary, not a substitute for it):
+
+You are free to
+  Share: copy and redistribute the material in any medium or format.
+  Adapt: remix, transform, and build upon the material for any purpose,
+  including commercially.
+The licensor cannot revoke these freedoms as long as you follow the licence terms.
+
+Under the following terms
+  Attribution: you must give appropriate credit, provide a link to the licence,
+  and indicate if changes were made. You may do so in any reasonable manner,
+  but not in any way that suggests the licensor endorses you or your use.
+  No additional restrictions: you may not apply legal terms or technological
+  measures that legally restrict others from doing anything the licence permits.
+
+Suggested attribution
+  "King of AEO measurement data" by Stephane Morera, EVOIX LLC
+  (https://github.com/stephanemorera88-spec/king-of-aeo-measurement),
+  licensed under CC BY 4.0.
+
+The code in this repository (scripts/) is licensed separately under the MIT
+licence; see LICENSE.
+
+Note on content inside the data: the files record answers returned by third
+party AI engines (ChatGPT, Perplexity, Claude, Gemini) and Google result pages,
+collected through the DataForSEO API. Quoted answer text and URLs belong to
+their respective authors; the CC BY 4.0 grant covers the dataset as compiled.

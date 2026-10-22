@@ -1,0 +1,16 @@
+# Credentials and environments; never commit them
+.env
+.env.*
+.mcp.json
+token.json
+client_secret.json
+*.venv
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# New probe runs you make yourself go in runs/ (the published raw data lives in data/)
+runs/
+scripts/*.jsonl
+.DS_Store
