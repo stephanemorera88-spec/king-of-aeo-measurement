@@ -42,6 +42,7 @@ All timestamps in the files are UTC.
 | 2026-10-02 | EXP-007 | 2026-10-02 05:56 to 06:01 | 4 engines + Google; same run counts; Gemini returned three 50301 rate-limit failures and no answers |
 | 2026-10-02 | EXP-009 | 2026-10-02 06:35 to 06:36 | "post-page top-up": 7 extra Q1 runs on ChatGPT, Claude and Perplexity after a page went live |
 | 2026-10-21 | EXP-009 | 2026-10-22 03:02 to 03:11 | the evening of 10/21 in US Eastern time; 3 runs each of Q1 and Q2 on 4 engines, plus Google. The Google rows label themselves "EXP-009 (EXP-007 day-19 read, late)" |
+| 2026-11-07 | EXP-010 | 2026-11-07 13:18 to 13:22 | day-14 read of the kingofaeo.io exact-match-domain test, run at day 15; 4 engines; 10 runs of Q1, 3 runs each of Q2, QFL, QCFL; 0 error rows; Gemini served `gemini-3.6-flash` again. The Google organic and Images pulls from the same read are not in this repository yet (different file shape). |
 
 ## Files and field meanings
 
@@ -119,6 +120,10 @@ Written by `scripts/dfs_llm_probe.py`. One line per run.
 | `aio_names_morera`, `aio_first_name` | whether the AI Overview text names Morera, and the first person it names |
 | `features` | SERP feature list |
 
+### Generation C, engine files (EXP-010-2026-11-07-day14-chat_gpt, -claude, -gemini, -perplexity)
+
+Same writer and the same fields as generation B, with two differences. The `label` values are `Q1 head`, `Q2 contenders`, `QFL`, `QCFL` (spaces, not hyphens), and each row also carries `answer_text`, the full answer, in addition to `answer_head`. The `exp` field reads `EXP-010 day-14 read (run day 15)`. The question under test in EXP-010 is whether the engines cite the domain kingofaeo.io; that is not a stored field, it is a host match on `cited_urls`, and the tally below adds a column for it on these rows only.
+
 ## Results, counts only
 
 Computed from the files in `data/` by the tally described below. "Valid runs" excludes rows that record an API error or a `FAILED` status. "Named Morera" counts rows where `named` (generation A) or `named_morera` (generation B) is `true`. No interpretation is attached to these numbers.
@@ -171,6 +176,22 @@ Computed from the files in `data/` by the tally described below. "Valid runs" ex
 | 2026-10-21 | EXP-009-2026-10-21-gemini.jsonl | Gemini | Q2 contenders | 3 | 3 | 0 |
 | 2026-10-21 | EXP-009-2026-10-21-perplexity.jsonl | Perplexity | Q1 head | 3 | 0 | 0 |
 | 2026-10-21 | EXP-009-2026-10-21-perplexity.jsonl | Perplexity | Q2 contenders | 3 | 3 | 0 |
+| 2026-11-07 | EXP-010-2026-11-07-day14-chat_gpt.jsonl | ChatGPT | Q1 head | 10 | 0 | 0 | kingofaeo.io cited: 0 |
+| 2026-11-07 | EXP-010-2026-11-07-day14-chat_gpt.jsonl | ChatGPT | Q2 contenders | 3 | 2 | 0 | kingofaeo.io cited: 0 |
+| 2026-11-07 | EXP-010-2026-11-07-day14-chat_gpt.jsonl | ChatGPT | QFL | 3 | 3 | 0 | kingofaeo.io cited: 0 |
+| 2026-11-07 | EXP-010-2026-11-07-day14-chat_gpt.jsonl | ChatGPT | QCFL | 3 | 3 | 0 | kingofaeo.io cited: 0 |
+| 2026-11-07 | EXP-010-2026-11-07-day14-claude.jsonl | Claude | Q1 head | 10 | 0 | 0 | kingofaeo.io cited: 0 |
+| 2026-11-07 | EXP-010-2026-11-07-day14-claude.jsonl | Claude | Q2 contenders | 3 | 3 | 0 | kingofaeo.io cited: 2 |
+| 2026-11-07 | EXP-010-2026-11-07-day14-claude.jsonl | Claude | QFL | 3 | 3 | 0 | kingofaeo.io cited: 3 |
+| 2026-11-07 | EXP-010-2026-11-07-day14-claude.jsonl | Claude | QCFL | 3 | 3 | 0 | kingofaeo.io cited: 3 |
+| 2026-11-07 | EXP-010-2026-11-07-day14-gemini.jsonl | Gemini | Q1 head | 10 | 1 | 0 | kingofaeo.io cited: not readable, Vertex redirect slots |
+| 2026-11-07 | EXP-010-2026-11-07-day14-gemini.jsonl | Gemini | Q2 contenders | 3 | 3 | 0 | kingofaeo.io cited: not readable |
+| 2026-11-07 | EXP-010-2026-11-07-day14-gemini.jsonl | Gemini | QFL | 3 | 3 | 0 | kingofaeo.io cited: not readable |
+| 2026-11-07 | EXP-010-2026-11-07-day14-gemini.jsonl | Gemini | QCFL | 3 | 3 | 0 | kingofaeo.io cited: not readable |
+| 2026-11-07 | EXP-010-2026-11-07-day14-perplexity.jsonl | Perplexity | Q1 head | 10 | 0 | 0 | kingofaeo.io cited: 0 |
+| 2026-11-07 | EXP-010-2026-11-07-day14-perplexity.jsonl | Perplexity | Q2 contenders | 3 | 3 | 0 | kingofaeo.io cited: 0 |
+| 2026-11-07 | EXP-010-2026-11-07-day14-perplexity.jsonl | Perplexity | QFL | 3 | 3 | 0 | kingofaeo.io cited: 0 |
+| 2026-11-07 | EXP-010-2026-11-07-day14-perplexity.jsonl | Perplexity | QCFL | 3 | 3 | 0 | kingofaeo.io cited: 0 |
 
 ### Google pulls
 
