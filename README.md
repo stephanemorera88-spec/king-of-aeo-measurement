@@ -103,7 +103,7 @@ Written by `scripts/dfs_llm_probe.py`. One line per run.
 | `run`, `ts` | run number, UTC timestamp |
 | `task_id`, `status`, `cost`, `money_spent` | DataForSEO task id, status message, charge for the task, charge reported inside the result |
 | `fan_out` | the engine's web search queries |
-| `named_morera`, `named_evoix` | case-insensitive regex match of `morera` and `evoix` in the answer text |
+| `named_morera`, `named_evoix` | case-insensitive regex match of `morera` and `evoix` in the answer text, inline citation links included (see the note added 2026-11-13 below) |
 | `evoix_cited`, `stephanemorera_cited` | whether any cited URL contains `evoix.io` or `stephanemorera.com` |
 | `cited_urls` | every annotation URL in the answer, in order, duplicates kept |
 | `answer_chars`, `answer_head` | length of the answer text and its first 900 characters |
@@ -122,7 +122,19 @@ Written by `scripts/dfs_llm_probe.py`. One line per run.
 
 ### Generation C, engine files (EXP-010-2026-11-07-day14-chat_gpt, -claude, -gemini, -perplexity)
 
-Same writer and the same fields as generation B, with two differences. The `label` values are `Q1 head`, `Q2 contenders`, `QFL`, `QCFL` (spaces, not hyphens), and each row also carries `answer_text`, the full answer, in addition to `answer_head`. The `exp` field reads `EXP-010 day-14 read (run day 15)`. The question under test in EXP-010 is whether the engines cite the domain kingofaeo.io; that is not a stored field, it is a host match on `cited_urls`, and the tally below adds a column for it on these rows only.
+Written by a later revision of the same script, with the same fields as generation B and two differences. The `label` values are `Q1 head`, `Q2 contenders`, `QFL`, `QCFL` (spaces, not hyphens), and each row also carries `answer_text`, the full answer, in addition to `answer_head`. That revision was not in this repository when these files were published. The script here writes `answer_text` from 2026-11-13. The `exp` field reads `EXP-010 day-14 read (run day 15)`. The question under test in EXP-010 is whether the engines cite the domain kingofaeo.io; that is not a stored field, it is a host match on `cited_urls`, and the tally below adds a column for it on these rows only.
+
+### Note added 2026-11-13 on the `named_*` flags
+
+ChatGPT answers returned by this endpoint carry their sources inline as markdown links, for example `([evoix.io](https://evoix.io/...))`. The `named_morera` and `named_evoix` flags search the whole answer text, so a flag is also true when the name appears only inside a citation link. Alongside `answer_text`, the script writes two more fields from 2026-11-13, `named_morera_prose` and `named_evoix_prose`, which run the same match after markdown links, bare URLs and domain strings are removed. No file published here carries those two fields yet.
+
+The published rows were rechecked on 2026-11-13.
+
+- 2026-11-07 files (full answer stored). `named_morera` and the prose match agree on every row, at 8, 9, 10 and 9 of 19 valid runs on ChatGPT, Claude, Gemini and Perplexity. `named_evoix` differs on ChatGPT only, where 8 rows are flagged and 5 name EVOIX in prose.
+- 2026-10-21 files. The stored text is the first 900 characters, except on Perplexity, where every answer is under 900 characters and is stored in full. A full recount is not possible for ChatGPT, Claude or Gemini. On ChatGPT and Claude, no row flagged `named_morera` cites a URL containing "morera", and every inline link in the ChatGPT answers is written as its bare domain, so those flags do not come from a link. Gemini's cited URLs are Vertex redirect links, so the URL test cannot be applied to it. No Gemini answer in the 2026-11-07 files contains an inline link. On Perplexity the three flagged rows cite a URL containing "morera", the stored text has no inline links, and each row names him in its text.
+- 2026-09-30 and 2026-10-02 files. Hand coded from the answer text, so the flags do not apply.
+
+The "Named Morera" counts in the tables below are unchanged and still use the raw flag. `named_evoix` is not used in those tables.
 
 ## Results, counts only
 

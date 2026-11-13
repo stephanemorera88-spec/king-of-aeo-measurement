@@ -19,6 +19,15 @@ for k in MODELS:
     MODELS[k] = os.environ.get(f"DFS_MODEL_{k.upper()}", MODELS[k])
 AUTH = "Basic " + base64.b64encode(f"{LOGIN}:{PASSWORD}".encode()).decode()
 
+def prose(t):
+    """Answer text with citations removed. ChatGPT answers carry their sources inline as markdown
+    links such as ([example.com](https://example.com/page)), so a search for a name in the raw text
+    is also true when the name appears only inside a link. Removes markdown links with their link
+    text, bare URLs and bare domain strings."""
+    t = re.sub(r"\[[^\]]*\]\([^)]*\)", "", t)
+    t = re.sub(r"https?://\S+", "", t)
+    return re.sub(r"\b(?:[a-z0-9-]+\.)+[a-z]{2,}\b", "", t, flags=re.I)
+
 def call(query):
     body = json.dumps([{"user_prompt": query, "model_name": MODELS[engine], "web_search": True, "max_output_tokens": 1500}]).encode()
     req = urllib.request.Request(f"https://api.dataforseo.com/v3/ai_optimization/{engine}/llm_responses/live", data=body,
@@ -44,11 +53,17 @@ with open(out, "a") as f:
                     txt = "\n".join(text)
                     row.update({"model": res.get("model_name"), "money_spent": res.get("money_spent"), "fan_out": res.get("fan_out_queries"),
                                 "named_morera": bool(re.search(r"morera", txt, re.I)), "named_evoix": bool(re.search(r"evoix", txt, re.I)),
+                                # *_prose: the same match on prose(txt). The two flags above match the raw
+                                # text, inline citation links included, and are kept so older rows compare.
+                                "named_morera_prose": bool(re.search(r"morera", prose(txt), re.I)), "named_evoix_prose": bool(re.search(r"evoix", prose(txt), re.I)),
                                 "evoix_cited": any("evoix.io" in u for u in urls), "stephanemorera_cited": any("stephanemorera.com" in u for u in urls),
-                                "cited_urls": urls, "answer_chars": len(txt), "answer_head": txt[:900]})
+                                "cited_urls": urls, "answer_chars": len(txt), "answer_head": txt[:900],
+                                # The full answer is stored too. On ChatGPT the first 900 characters are
+                                # mostly the model's search notes, so the head alone can miss who was named.
+                                "answer_text": txt})
                 else:
                     row["error"] = json.dumps(t)[:300]
             except Exception as e:
                 row["error"] = f"{type(e).__name__}: {str(e)[:200]}"
             f.write(json.dumps(row) + "\n"); f.flush()
-            print(f"{engine} {p['label']} run {i}: morera={row.get('named_morera')} evoix={row.get('named_evoix')} cited={row.get('evoix_cited')} cost={row.get('cost')} {row.get('error','')[:80]}", flush=True)
+            print(f"{engine} {p['label']} run {i}: morera={row.get('named_morera')} morera_prose={row.get('named_morera_prose')} evoix={row.get('named_evoix')} evoix_prose={row.get('named_evoix_prose')} cited={row.get('evoix_cited')} cost={row.get('cost')} {row.get('error','')[:80]}", flush=True)
